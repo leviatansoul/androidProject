@@ -1,11 +1,19 @@
 package leviatansoul.finalproject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,4 +49,37 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+/*
+    private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
+
+        private String contentType = "";
+
+        @Override
+        @SuppressWarnings( "deprecation" )
+        protected String doInBackground(String... urls) {
+            String response = "";
+
+            HttpURLConnection urlConnection = null;
+            try {
+
+
+            } catch (Exception e) {
+                response = e.toString();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            Toast.makeText(MainActivity.this, contentType, Toast.LENGTH_SHORT).show();
+            text.setText( result );
+            btLoad.setEnabled(true);
+        }
+    }
+*/
+
 }
+
+
