@@ -17,6 +17,7 @@ import java.util.List;
 public class ExtractJson {
 
     public static ArrayList<Station> stationList = new ArrayList<Station>();
+    public static ArrayList<Station> favStationList = new ArrayList<Station>();
     private final static String URL_BICIMAD = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 
 

@@ -1,5 +1,6 @@
 package leviatansoul.finalproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -11,47 +12,59 @@ public class FavStorage {
 
     public static List<String> favList = new ArrayList<>();
 
-    public void initFavTest(){
-        favList.add("2");
-        favList.add("3");
-        favList.add("4");
+    public static void initFavList(Activity a){
+        String[] favs = getFavs(a);
+        favList = new ArrayList<>(Arrays.asList(favs));
+        updateFavList();
     }
 
-    public String[] getFavs(){
+
+    public static String[] getFavs(Activity a){
 
         String[] favs = {};
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = a.getPreferences(Context.MODE_PRIVATE);
         String favsString = sharedPref.getString("favs", null);
-        if (favs != null){
-            favs = favsString.split(",");
+        if (favsString != null){
+            favs = favsString.replace("[","").replace("]", "").replace(" ","").split(",");
         }
         return favs;
 
     }
 
-    public void insertFav(String station){
-        String[] favs = getFavs();
+    public static void insertFav(String station, Activity a){
+        String[] favs = getFavs(a);
         favList = Arrays.asList(favs);
+        favList = new ArrayList<>(favList);
         favList.add(station);
-        saveFavs((String[])favList.toArray());
+        saveFavs(favList.toArray(new String[0]), a);
     }
 
-    public void deleteFav(String station){
-        String[] favs = getFavs();
+    public static void deleteFav(String station, Activity a){
+        String[] favs = getFavs(a);
         favList = Arrays.asList(favs);
+        favList = new ArrayList<>(favList);
         favList.remove(station);
-        saveFavs((String[])favList.toArray());
+        saveFavs(favList.toArray(new String[0]), a);
 
     }
 
-    public void saveFavs(String[] favs){
+    public static void saveFavs(String[] favs, Activity a){
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = a.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("favs", favs.toString());
+        String prueba = Arrays.toString(favs);
+        editor.putString("favs", Arrays.toString(favs));
         editor.commit();
+        updateFavList();
 
     }
+
+    public static void updateFavList(){
+        for(String i: favList){
+            ExtractJson.favStationList.add(ExtractJson.stationList.get(Integer.parseInt(i)-1));
+        }
+    }
+
 
 
 

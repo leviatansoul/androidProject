@@ -26,27 +26,17 @@ public class FavActivity extends AppCompatActivity {
         //mTextMessage = (TextView) findViewById(R.id.message);
 
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute( "jeje" );
+        task.execute();
 
-        /*
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start(); */
 
 
 
         lista = (ListView)findViewById(R.id.favlist);
 
 
-        ArrayList<Station> itemsStations = ExtractJson.stationList;
+        ArrayList<Station> itemsFavStations = ExtractJson.favStationList;
 
-        adapter = new StationAdapter(this, itemsStations);
+        adapter = new StationAdapter(this, itemsFavStations);
 
         lista.setAdapter(adapter);
     }
@@ -63,6 +53,7 @@ public class FavActivity extends AppCompatActivity {
 
             try {
                 ExtractJson.fillStationList();
+                FavStorage.initFavList( FavActivity.this);
             } catch (Exception e) {
                 response = e.toString();
             }
@@ -77,6 +68,10 @@ public class FavActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+
+
+
 
 
 
