@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
 
-                    //Intent For Navigating to MapsActivity
+                    //Intent For Navigating to FavActivity
                     Intent a = new Intent(MainActivity.this,FavActivity.class);
                     startActivity(a);
 
@@ -55,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
+
 
 /*
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {

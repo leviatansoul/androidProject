@@ -1,9 +1,12 @@
 package leviatansoul.finalproject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,17 +21,46 @@ public class FavActivity extends AppCompatActivity {
     private  ListView lista;
     public static StationAdapter adapter;
 
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+
+                    //Intent For Navigating to MapsActivity
+                    Intent i = new Intent(FavActivity.this,MapsActivity.class);
+                    startActivity(i);
+
+                    return true;
+                case R.id.navigation_dashboard:
+
+                    //Intent For Navigating to FavActivity
+                    Intent a = new Intent(FavActivity.this,FavActivity.class);
+                    startActivity(a);
+
+                    return true;
+                case R.id.navigation_notifications:
+
+                    return true;
+            }
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav);
 
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         //mTextMessage = (TextView) findViewById(R.id.message);
 
         DownloadWebPageTask task = new DownloadWebPageTask();
         task.execute();
-
-
 
 
         lista = (ListView)findViewById(R.id.favlist);
@@ -68,11 +100,4 @@ public class FavActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
-
-
-
-
-
-
-
 }

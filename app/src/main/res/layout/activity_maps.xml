@@ -1,31 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".MapsActivity" >
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
 
     <fragment
         android:id="@+id/map"
-        class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        map:layout_constraintBottom_toTopOf="@+id/navigation"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        tools:context="lab.dam.mapdemo.MapsActivity" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation" />
 
     <RadioGroup
         android:id="@+id/grupoRadioMapType"
-        android:layout_width="match_parent"
+        android:layout_width="224dp"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/typeMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="@string/map"
             android:textStyle="bold" />
 
@@ -33,15 +50,15 @@
             android:id="@+id/typeSatellite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="@string/satellite"
             android:textStyle="bold" />
 
         <RadioButton
             android:id="@+id/typeHybrid"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/hybrid"
             android:textStyle="bold" />
+
     </RadioGroup>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
