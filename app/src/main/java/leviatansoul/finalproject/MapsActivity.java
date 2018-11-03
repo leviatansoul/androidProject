@@ -26,6 +26,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -73,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,13 +85,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        // Initialize the manager with the context and the map.
+        clusterManager = new ClusterManager<MyItem>(this, mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster manager.
+        //mMap.setOnCameraIdleListener(clusterManager);
+        //mMap.setOnMarkerClickListener(clusterManager);
+
         checkLocationPermissionBT();
-        
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -123,7 +133,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -144,12 +155,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setUpClusterer();
 
+        clusterManager.clearItems();
+
         //ubicacion estaciones
         for(int i=0; i<ExtractJson.stationList.size(); i ++) {
 
             // Add cluster items (markers) to the cluster manager.
-            addItems(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude());
+            MyItem item = new MyItem(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude(),
+                    ExtractJson.stationList.get(i).getName(), "bicis disponibles: "+ ExtractJson.stationList.get(i).getDock_bikes());
+            clusterManager.addItem(item);
+
         }
+
+        //Force a re-cluster. You may want to call this after adding new item(s).
+        clusterManager.cluster();
 
 
 
@@ -200,9 +219,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void addItems(double lat, double lng) {
-
-            MyItem item = new MyItem(lat, lng);
-            clusterManager.addItem(item);
-    }
 }

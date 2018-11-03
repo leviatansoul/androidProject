@@ -74,7 +74,7 @@ public class FavActivity extends AppCompatActivity {
     }
 
 
-    private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
+    class DownloadWebPageTask extends AsyncTask<String, Void, String> {
 
         private String contentType = "";
 

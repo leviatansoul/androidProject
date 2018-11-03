@@ -134,10 +134,14 @@ public class ExtractJson {
 
         JsonArray stationsJson = dataJson.getAsJsonArray("stations");
 
+        //clear the list
+        stationList.clear();
+
         for(int i = 0; i<stationsJson.size(); i++) {
             Station st = gson.fromJson(stationsJson.get(i), Station.class);
             System.out.println(st.getLatitude());
             stationList.add(st);
+
         }
 
 
