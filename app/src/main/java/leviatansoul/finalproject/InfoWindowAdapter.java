@@ -12,7 +12,7 @@ import com.google.android.gms.internal.maps.zzt;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnClickListener {
 
     private View view;
 
@@ -64,8 +64,24 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         noavailable.setText(Integer.toString(ExtractJson.stationList.get(station).getNo_available()));
         number.setText(ExtractJson.stationList.get(station).getNumber());
 
+        favorites.setOnClickListener(InfoWindowAdapter.this);
+
         return view;
         
+    }
+
+    /* This method is called when any of the activity's view components is clicked. */
+    @Override
+    public void onClick(View view) {
+        if(view != null)
+        {
+
+
+            // Create the toast popup message.
+            Toast toast = Toast.makeText(view.getContext(), "HOLI", Toast.LENGTH_SHORT);
+
+            toast.show();
+        }
     }
 }
 

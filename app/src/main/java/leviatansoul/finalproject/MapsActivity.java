@@ -148,11 +148,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //ubicacion actual
-        /*LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 
         mMap.addMarker(new MarkerOptions().position(ubicLatLng));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
-        mMap.animateCamera(cameraUpdate);*/
+        mMap.animateCamera(cameraUpdate);
 
         setUpClusterer();
 

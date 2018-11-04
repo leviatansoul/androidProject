@@ -1,5 +1,6 @@
 package leviatansoul.finalproject;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -22,6 +23,7 @@ public class BikeStopWidget extends AppWidgetProvider {
     private static Context contexto;
     private static AppWidgetManager awm;
     private static String num ;
+    public static String WIDGET_BUTTON = "android.appwidget.action.APPWIDGET_UPDATE";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
@@ -34,6 +36,7 @@ public class BikeStopWidget extends AppWidgetProvider {
         sb.append(widgetText);
        String s = sb.toString();
         Log.d("WIDGET ", s);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bike_stop_widget);
         num = s;
@@ -54,6 +57,7 @@ public class BikeStopWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
@@ -72,6 +76,16 @@ public class BikeStopWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
     }
+
+
+
+    public void onReceive(Context context, Intent intent) {
+
+        if (WIDGET_BUTTON.equals(intent.getAction())){
+            Log.d("WIDGED", "FUNCIONA");
+            recargar();
+        }
+    };
 
     @Override
     public void onDisabled(Context context) {
@@ -104,6 +118,11 @@ public class BikeStopWidget extends AppWidgetProvider {
                 views.setTextViewText(R.id.wbicis, Integer.toString(station.getDock_bikes()));
                 views.setTextViewText(R.id.wespacios, Integer.toString(station.getFree_bases()));
                 views.setTextViewText(R.id.wnoavailable, Integer.toString(station.getNo_available()));
+
+                Intent intent = new Intent(WIDGET_BUTTON);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(contexto, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                views.setOnClickPendingIntent(R.id.wbutton, pendingIntent);
+
                 // Instruct the widget manager to update the widget
                 awm.updateAppWidget(appWidgetIdentificador, views);
 
