@@ -1,42 +1,36 @@
 package leviatansoul.finalproject;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.RadioGroup;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
+import android.location.LocationManager;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
+
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
@@ -52,8 +46,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ClusterManager <MyItem> clusterManager;
 
     private GoogleMap mMap;
-
-    RadioGroup radGrp;
 
     Button favorites;
 
@@ -87,11 +79,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        radGrp = findViewById(R.id.grupoRadioMapType);
-
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        FloatingActionButton refresh = findViewById(R.id.refresh);
 
         checkLocationPermissionBT();
 
@@ -115,6 +106,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MapsActivity.DownloadWebPageTask task = new MapsActivity.DownloadWebPageTask();
+                task.execute();
+            }
+        });
     }
 
 
@@ -131,7 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         mMap.setInfoWindowAdapter(new InfoWindowAdapter(this));
 
@@ -170,7 +171,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Force a re-cluster. You may want to call this after adding new item(s).
         clusterManager.cluster();
 
-        radGrp.setOnCheckedChangeListener(new radioGroupCheckedChanged());
     }
 
     //permisions
@@ -187,23 +187,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-    // Listener related to the user choosing a different map type (through the radio buttons)
-    class radioGroupCheckedChanged implements RadioGroup.OnCheckedChangeListener {
-        public void onCheckedChanged(RadioGroup arg0, int id) {
-            switch (id) {
-                case R.id.typeMap:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    break;
-                case R.id.typeSatellite:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                    break;
-                case R.id.typeHybrid:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                    break;
-            }
-        }
-    }
 
     private void setUpClusterer() {
 
@@ -253,5 +236,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private class DownloadWebPageTask extends AsyncTask<String, Integer, String> {
 
+        private String contentType = "";
+
+        @Override
+        @SuppressWarnings( "deprecation" )
+        protected String doInBackground(String... urls) {
+            String response = "";
+
+            try {
+                ExtractJson.fillStationList();
+            } catch (Exception e) {
+                response = e.toString();
+            }
+            return response;
+        }
+    }
 }
