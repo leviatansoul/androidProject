@@ -29,10 +29,20 @@ public class StationAdapter extends ArrayAdapter<Station> {
             newView = inflater.inflate(R.layout.fav_list_item, parent, false);
         }
 //-----
-        TextView textView = (TextView) newView.findViewById(R.id.name);
+        TextView name = (TextView) newView.findViewById(R.id.name);
+        TextView address = (TextView) newView.findViewById(R.id.address);
+        TextView bicis = (TextView) newView.findViewById(R.id.bicis);
+        TextView espacios = (TextView) newView.findViewById(R.id.espacios);
+        TextView noavailable = (TextView) newView.findViewById(R.id.noavailable);
+        TextView number = (TextView) newView.findViewById(R.id.station);
       //  ImageView imageView = (ImageView) newView.findViewById(R.id.imgCountry);
         Station station = items.get(position);
-        textView.setText(station.getName());
+        name.setText(station.getName());
+        address.setText(station.getAddress());
+        bicis.setText(""+station.getDock_bikes());
+        espacios.setText(""+station.getFree_bases());
+        noavailable.setText(""+station.getNo_available());
+        number.setText(station.getNumber());
       //  imageView.setImageResource(country.getImageResource());
         return newView;
     }

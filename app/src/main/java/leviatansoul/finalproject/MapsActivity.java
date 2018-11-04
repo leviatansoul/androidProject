@@ -162,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             // Add cluster items (markers) to the cluster manager.
             MyItem item = new MyItem(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude(),
-                    ExtractJson.stationList.get(i).getName(), "bicis disponibles: "+ ExtractJson.stationList.get(i).getDock_bikes());
+                    ExtractJson.stationList.get(i).getName(), "Bicis disponibles: "+ ExtractJson.stationList.get(i).getDock_bikes());
             clusterManager.addItem(item);
 
         }

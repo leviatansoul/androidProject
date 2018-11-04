@@ -19,6 +19,7 @@ public class ExtractJson {
     public static ArrayList<Station> stationList = new ArrayList<Station>();
     public static ArrayList<Station> favStationList = new ArrayList<Station>();
     private final static String URL_BICIMAD = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
+    private final static String URL_BICIMAD_SINGLE = "https://rbdata.emtmadrid.es:8443/BiciMad/get_single_station/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 
 
     public static String getFile(String url) {
@@ -146,6 +147,17 @@ public class ExtractJson {
 
 
         System.out.println(URL_BICIMAD);
+    }
+
+    public static Station getSingleStation(String station){
+        String singleUrl = URL_BICIMAD_SINGLE+station;
+        JsonObject json = ExtractJson.getJson(singleUrl);
+        String data = json.get("data").getAsString();
+        Gson gson = new Gson();
+        JsonElement jelem = gson.fromJson(data, JsonElement.class);
+        JsonObject dataJson = jelem.getAsJsonObject();
+        JsonArray stationsJson = dataJson.getAsJsonArray("stations");
+        return gson.fromJson(stationsJson.get(0), Station.class);
     }
 
     public static void main(String[] args) {

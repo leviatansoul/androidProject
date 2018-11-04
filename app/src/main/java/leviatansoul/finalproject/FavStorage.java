@@ -21,6 +21,7 @@ public class FavStorage {
 
     public static String[] getFavs(Activity a){
 
+        favList.clear();
         String[] favs = {};
         SharedPreferences sharedPref = a.getPreferences(Context.MODE_PRIVATE);
         String favsString = sharedPref.getString("favs", null);
@@ -60,6 +61,7 @@ public class FavStorage {
     }
 
     public static void updateFavList(){
+        ExtractJson.favStationList.clear();
         for(String i: favList){
             ExtractJson.favStationList.add(ExtractJson.stationList.get(Integer.parseInt(i)-1));
         }

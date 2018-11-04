@@ -1,12 +1,15 @@
 package leviatansoul.finalproject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -71,6 +74,35 @@ public class FavActivity extends AppCompatActivity {
         adapter = new StationAdapter(this, itemsFavStations);
 
         lista.setAdapter(adapter);
+
+
+        lista.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //Pulsación larga
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(FavActivity.this);
+                // Add the buttons
+                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                builder.setMessage("¿Borrar?");
+
+
+                // Create the AlertDialog
+                AlertDialog dialog = builder.create();
+
+                return false;
+            }
+        });
     }
 
 
@@ -84,7 +116,6 @@ public class FavActivity extends AppCompatActivity {
             String response = "";
 
             try {
-                ExtractJson.fillStationList();
                 FavStorage.initFavList( FavActivity.this);
             } catch (Exception e) {
                 response = e.toString();
