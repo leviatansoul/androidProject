@@ -39,9 +39,6 @@ public class FavActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
 
-                    //Intent For Navigating to FavActivity
-                    Intent a = new Intent(FavActivity.this,FavActivity.class);
-                    startActivity(a);
 
                     return true;
                 case R.id.navigation_notifications:

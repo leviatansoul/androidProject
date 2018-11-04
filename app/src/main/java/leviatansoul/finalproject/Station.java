@@ -119,9 +119,7 @@ public class Station {
 
 
 
-    public int getNo_available() {
-        return no_available;
-    }
+    public int getNo_available() { return no_available; }
 
 
 
