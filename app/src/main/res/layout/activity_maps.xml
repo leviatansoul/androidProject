@@ -29,36 +29,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/navigation"/>
 
-    <RadioGroup
-        android:id="@+id/grupoRadioMapType"
-        android:layout_width="224dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        android:orientation="horizontal">
+        android:layout_marginStart="330dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_menu_rotate"
+        app:backgroundTint="@color/colorPrimary"
+        map:layout_constraintBottom_toTopOf="@+id/navigation"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.111"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintVertical_bias="0.901" />
 
-        <RadioButton
-            android:id="@+id/typeMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/map"
-            android:textStyle="bold" />
-
-        <RadioButton
-            android:id="@+id/typeSatellite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/satellite"
-            android:textStyle="bold" />
-
-        <RadioButton
-            android:id="@+id/typeHybrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hybrid"
-            android:textStyle="bold" />
-
-    </RadioGroup>
 </android.support.constraint.ConstraintLayout>

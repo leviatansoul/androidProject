@@ -26,6 +26,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         LayoutInflater inflater = (LayoutInflater) myContext.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         view = inflater.inflate(R.layout.info_window, null);
+
     }
 
     @Override
@@ -49,6 +50,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         TextView number = view.findViewById(R.id.station);
 
         Button favorites = view.findViewById(R.id.favorites);
+        view.setClickable(true);
 
         for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
@@ -64,7 +66,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         noavailable.setText(Integer.toString(ExtractJson.stationList.get(station).getNo_available()));
         number.setText(ExtractJson.stationList.get(station).getNumber());
 
-        favorites.setOnClickListener(InfoWindowAdapter.this);
+        view.setOnClickListener(InfoWindowAdapter.this);
 
         return view;
         
