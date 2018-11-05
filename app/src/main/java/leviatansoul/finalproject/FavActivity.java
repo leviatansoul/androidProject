@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +19,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavActivity extends AppCompatActivity {
+public class FavActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView mTextMessage;
     private  ListView lista;
     public static StationAdapter adapter;
+
+    Button delete;
+
+    FavStorage fav = new FavStorage();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,6 +47,10 @@ public class FavActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_notifications:
 
+                    //Intent For Navigating to StationActivity
+                    Intent a = new Intent(FavActivity.this,StationActivity.class);
+                    startActivity(a);
+
                     return true;
             }
             return false;
@@ -57,11 +65,8 @@ public class FavActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //mTextMessage = (TextView) findViewById(R.id.message);
-
-        DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute();
-
+        delete = (Button) findViewById(R.id.delete);
+        delete.setOnClickListener(FavActivity.this);
 
         lista = (ListView)findViewById(R.id.favlist);
 
@@ -102,30 +107,11 @@ public class FavActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        fav.deleteFav(Integer.toString(ExtractJson.stationList.get(MapsActivity.station).getId()), FavActivity.this);
 
-    class DownloadWebPageTask extends AsyncTask<String, Void, String> {
-
-        private String contentType = "";
-
-        @Override
-        @SuppressWarnings( "deprecation" )
-        protected String doInBackground(String... urls) {
-            String response = "";
-
-            try {
-                FavStorage.initFavList( FavActivity.this);
-            } catch (Exception e) {
-                response = e.toString();
-            }
-
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            Toast.makeText(FavActivity.this, contentType, Toast.LENGTH_SHORT).show();
-            adapter.notifyDataSetChanged();
-        }
+        Toast.makeText(this, "Eliminado de favoritos", Toast.LENGTH_SHORT).show();
     }
+
 }

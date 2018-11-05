@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import android.location.Location;
 
 import android.location.LocationManager;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -50,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-    Button favorites;
+    public static int station = 1;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,6 +70,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     return true;
                 case R.id.navigation_notifications:
+                    //Intent For Navigating to StationActivity
+                    Intent b = new Intent(MapsActivity.this,StationActivity.class);
+                    startActivity(b);
 
                     return true;
             }
@@ -119,6 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 task.execute();
             }
         });
+
     }
 
 
@@ -139,6 +144,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setInfoWindowAdapter(new InfoWindowAdapter(this));
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                for (int i = 0; i < ExtractJson.stationList.size(); i++) {
+
+                    if (marker.getTitle().equals(Integer.toString(ExtractJson.stationList.get(i).getId()))) {
+                        station = i;
+                    }
+                }
+
+                //Intent For Navigating to StationActivity
+                Intent a = new Intent(MapsActivity.this,StationActivity.class);
+                startActivity(a);
+
+            }
+        });
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -152,11 +175,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //ubicacion actual
-        LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        //LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 
         //mMap.addMarker(new MarkerOptions().position(ubicLatLng));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
-        mMap.animateCamera(cameraUpdate);
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
+        //mMap.animateCamera(cameraUpdate);
 
         setUpClusterer();
 
@@ -174,8 +197,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Force a re-cluster. You may want to call this after adding new item(s).
         clusterManager.cluster();
 
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        //mMap.setMyLocationEnabled(true);
+        //mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
     //permisions
@@ -200,8 +223,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         clusterManager.setRenderer(new MyClusterRenderer(this, mMap, clusterManager));
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
+        // Point the map's listeners at the listeners implemented by the cluster manager.
         mMap.setOnCameraIdleListener(clusterManager);
         mMap.setOnMarkerClickListener(clusterManager);
 
@@ -258,4 +280,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return response;
         }
     }
+
+
 }

@@ -42,6 +42,10 @@
             android:name=".FavActivity"
             android:label="@string/title_favoritos" />
 
+        <activity
+            android:name=".StationActivity"
+            android:label="@string/title_estaciones" />
+
         <receiver android:name=".BikeStopWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
