@@ -23,7 +23,7 @@ public class FavStorage {
 
         favList.clear();
         String[] favs = {};
-        SharedPreferences sharedPref = a.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = a.getApplicationContext().getSharedPreferences("datos", Context.MODE_PRIVATE);
         String favsString = sharedPref.getString("favs", null);
         if (favsString != null){
             favs = favsString.replace("[","").replace("]", "").replace(" ","").split(",");
@@ -51,7 +51,7 @@ public class FavStorage {
 
     public static void saveFavs(String[] favs, Activity a){
 
-        SharedPreferences sharedPref = a.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = a.getApplicationContext().getSharedPreferences("datos", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         String prueba = Arrays.toString(favs);
         editor.putString("favs", Arrays.toString(favs));
@@ -63,7 +63,14 @@ public class FavStorage {
     public static void updateFavList(){
         ExtractJson.favStationList.clear();
         for(String i: favList){
-            ExtractJson.favStationList.add(ExtractJson.stationList.get(Integer.parseInt(i)-1));
+            if(!i.equals("")){
+                for(Station s: ExtractJson.stationList){
+                    if(s.getId() == Integer.parseInt(i) ){
+                        ExtractJson.favStationList.add(s);
+                    }
+                }
+              //  ExtractJson.favStationList.add(ExtractJson.stationList.get(Integer.parseInt(i)-1));
+            }
         }
     }
 

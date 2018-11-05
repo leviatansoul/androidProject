@@ -59,8 +59,7 @@ public class FavActivity extends AppCompatActivity {
 
         //mTextMessage = (TextView) findViewById(R.id.message);
 
-        DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute();
+
 
 
         lista = (ListView)findViewById(R.id.favlist);
@@ -68,9 +67,12 @@ public class FavActivity extends AppCompatActivity {
 
         ArrayList<Station> itemsFavStations = ExtractJson.favStationList;
 
-        adapter = new StationAdapter(this, itemsFavStations);
+        adapter = new StationAdapter(this, itemsFavStations, FavActivity.this);
 
         lista.setAdapter(adapter);
+
+        DownloadWebPageTask task = new DownloadWebPageTask();
+        task.execute();
 
 
         lista.setOnLongClickListener(new View.OnLongClickListener() {
@@ -124,7 +126,7 @@ public class FavActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            Toast.makeText(FavActivity.this, contentType, Toast.LENGTH_SHORT).show();
+            //FavStorage.insertFav("2", FavActivity.this);
             adapter.notifyDataSetChanged();
         }
     }

@@ -1,10 +1,13 @@
 package leviatansoul.finalproject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,10 +17,13 @@ public class StationAdapter extends ArrayAdapter<Station> {
 
     private ArrayList<Station> items;
     private Context mContext;
-    StationAdapter(Context context, ArrayList<Station> stations ) {
+    private Activity mActivity;
+
+    StationAdapter(Context context, ArrayList<Station> stations, Activity activity ) {
         super( context,0, stations ); // Call to super class constructor
         items = stations;
         mContext = context;
+        mActivity = activity;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent ) {
@@ -35,8 +41,9 @@ public class StationAdapter extends ArrayAdapter<Station> {
         TextView espacios = (TextView) newView.findViewById(R.id.espacios);
         TextView noavailable = (TextView) newView.findViewById(R.id.noavailable);
         TextView number = (TextView) newView.findViewById(R.id.station);
+        Button delete = (Button) newView.findViewById(R.id.delete);
       //  ImageView imageView = (ImageView) newView.findViewById(R.id.imgCountry);
-        Station station = items.get(position);
+        final Station station = items.get(position);
         name.setText(station.getName());
         address.setText(station.getAddress());
         bicis.setText(""+station.getDock_bikes());
@@ -44,6 +51,16 @@ public class StationAdapter extends ArrayAdapter<Station> {
         noavailable.setText(""+station.getNo_available());
         number.setText(station.getNumber());
       //  imageView.setImageResource(country.getImageResource());
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("BORRRAR numero ",Integer.toString(station.getId()));
+                FavStorage.deleteFav(Integer.toString(station.getId()), mActivity);
+                FavActivity.adapter.notifyDataSetChanged();
+            }
+        });
+
         return newView;
     }
 }
