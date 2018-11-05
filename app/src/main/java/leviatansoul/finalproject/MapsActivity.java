@@ -152,11 +152,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
                     if (marker.getTitle().equals(Integer.toString(ExtractJson.stationList.get(i).getId()))) {
-                        res = i;
+                        res = Integer.parseInt(marker.getTitle());
                     }
                 }
 
-                Log.d("MAP LISTETNER ", Integer.toString(res));
+                Log.d("MAP LISTETNER "+marker.getTitle()+"  id  "+marker.getId(), Integer.toString(res));
                 FavStorage.insertFav(Integer.toString(res), MapsActivity.this);
                 Toast.makeText(MapsActivity.this, "Agregado a favoritos", Toast.LENGTH_SHORT).show();
 

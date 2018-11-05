@@ -49,7 +49,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         TextView noavailable = view.findViewById(R.id.noavailable);
         TextView number = view.findViewById(R.id.station);
 
-        Button favorites = view.findViewById(R.id.favorites);
+        //Button favorites = view.findViewById(R.id.favorites);
         view.setClickable(true);
 
         for (int i = 0; i < ExtractJson.stationList.size(); i++) {
