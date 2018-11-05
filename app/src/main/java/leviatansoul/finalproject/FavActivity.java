@@ -1,5 +1,6 @@
 package leviatansoul.finalproject;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,8 +9,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,14 +22,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavActivity extends AppCompatActivity implements View.OnClickListener {
+public class FavActivity extends AppCompatActivity {
 
     private  ListView lista;
     public static StationAdapter adapter;
-
-    Button delete;
-
-    FavStorage fav = new FavStorage();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -65,23 +64,31 @@ public class FavActivity extends AppCompatActivity implements View.OnClickListen
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        delete = (Button) findViewById(R.id.delete);
-        delete.setOnClickListener(FavActivity.this);
 
         lista = (ListView)findViewById(R.id.favlist);
 
 
         ArrayList<Station> itemsFavStations = ExtractJson.favStationList;
 
-        adapter = new StationAdapter(this, itemsFavStations);
+        adapter = new StationAdapter(this, itemsFavStations, FavActivity.this);
 
         lista.setAdapter(adapter);
 
+        //FavStorage.initFavList(FavActivity.this);
+        adapter.notifyDataSetChanged();
 
-        lista.setOnLongClickListener(new View.OnLongClickListener() {
+        //DownloadWebPageTask task = new DownloadWebPageTask();
+        //task.execute();
+
+        //You can Use this method
+      /* lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                //Pulsación larga
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                // TODO Auto-generated method stub
+
+                Log.v("long clicked","pos: " + pos);
+
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FavActivity.this);
                 // Add the buttons
@@ -102,16 +109,34 @@ public class FavActivity extends AppCompatActivity implements View.OnClickListen
                 // Create the AlertDialog
                 AlertDialog dialog = builder.create();
 
-                return false;
+                return true;
             }
-        });
+        }); */
+
+
     }
 
-    @Override
-    public void onClick(View v) {
-        fav.deleteFav(Integer.toString(ExtractJson.stationList.get(MapsActivity.station).getId()), FavActivity.this);
+    class DownloadWebPageTask extends AsyncTask<String, Void, String> {
+        private String contentType = "";
 
-        Toast.makeText(this, "Eliminado de favoritos", Toast.LENGTH_SHORT).show();
+        @Override
+        @SuppressWarnings("deprecation")
+        protected String doInBackground(String... urls) {
+            String response = "";
+            try {
+                FavStorage.initFavList(FavActivity.this);
+            } catch (Exception e) {
+                response = e.toString();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+           // Toast.makeText(FavActivity.this, contentType, Toast.LENGTH_SHORT).show();
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
 }

@@ -175,11 +175,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //ubicacion actual
-        //LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 
         //mMap.addMarker(new MarkerOptions().position(ubicLatLng));
-        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
-        //mMap.animateCamera(cameraUpdate);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
+        mMap.animateCamera(cameraUpdate);
 
         setUpClusterer();
 
@@ -197,8 +197,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Force a re-cluster. You may want to call this after adding new item(s).
         clusterManager.cluster();
 
-        //mMap.setMyLocationEnabled(true);
-        //mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
     //permisions
