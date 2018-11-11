@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ public class BikeStopWidget extends AppWidgetProvider {
     private static int appWidgetIdentificador = 0;
     private static Context contexto;
     private static AppWidgetManager awm;
-    private static String num ;
+    private static String num;
     public static String WIDGET_BUTTON = "android.appwidget.action.APPWIDGET_UPDATE";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -34,20 +35,18 @@ public class BikeStopWidget extends AppWidgetProvider {
         widgetText = BikeStopWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         final StringBuilder sb = new StringBuilder(widgetText.length());
         sb.append(widgetText);
-       String s = sb.toString();
+        String s = sb.toString();
         Log.d("WIDGET ", s);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bike_stop_widget);
         num = s;
-        if(!s.equals("Num. de estación")){
+        if (!s.equals("")) {
 
             GetStation task = new GetStation();
             task.execute(s);
 
         }
-
-
 
 
         // Instruct the widget manager to update the widget
@@ -78,23 +77,31 @@ public class BikeStopWidget extends AppWidgetProvider {
     }
 
 
-
     public void onReceive(Context context, Intent intent) {
 
-        if (WIDGET_BUTTON.equals(intent.getAction())){
+        if (WIDGET_BUTTON.equals(intent.getAction())) {
             Log.d("WIDGED", "FUNCIONA");
             recargar();
         }
-    };
+    }
+
+    ;
 
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    private static void recargar(){
+    private static void recargar() {
         GetStation task = new GetStation();
-        task.execute(num);
+
+        if (contexto != null) {
+            RemoteViews views = new RemoteViews(contexto.getPackageName(), R.layout.bike_stop_widget);
+            views.setViewVisibility(R.id.wbutton, View.INVISIBLE);
+            awm.updateAppWidget(appWidgetIdentificador, views);
+            task.execute(num);
+        }
+
     }
 
 
@@ -103,7 +110,7 @@ public class BikeStopWidget extends AppWidgetProvider {
         private String contentType = "";
 
         @Override
-        @SuppressWarnings( "deprecation" )
+        @SuppressWarnings("deprecation")
         protected String doInBackground(String... urls) {
             String response = "";
 
@@ -118,7 +125,8 @@ public class BikeStopWidget extends AppWidgetProvider {
                 views.setTextViewText(R.id.wbicis, Integer.toString(station.getDock_bikes()));
                 views.setTextViewText(R.id.wespacios, Integer.toString(station.getFree_bases()));
                 views.setTextViewText(R.id.wnoavailable, Integer.toString(station.getNo_available()));
-
+                // views.setProgressBar(R.id.wprogress, 10,10,true);
+                // views.setViewVisibility(R.id.wprogress, 1);
                 Intent intent = new Intent(WIDGET_BUTTON);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(contexto, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 views.setOnClickPendingIntent(R.id.wbutton, pendingIntent);
@@ -141,11 +149,12 @@ public class BikeStopWidget extends AppWidgetProvider {
         @Override
         protected void onPostExecute(String result) {
 
+            RemoteViews views = new RemoteViews(contexto.getPackageName(), R.layout.bike_stop_widget);
+            views.setViewVisibility(R.id.wbutton, View.VISIBLE);
+            awm.updateAppWidget(appWidgetIdentificador, views);
 
         }
     }
-
-
 
 
 }

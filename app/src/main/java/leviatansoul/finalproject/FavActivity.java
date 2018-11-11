@@ -21,7 +21,7 @@ import java.util.List;
 public class FavActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    private  ListView lista;
+    private ListView lista;
     public static StationAdapter adapter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -33,15 +33,12 @@ public class FavActivity extends AppCompatActivity {
                 case R.id.navigation_home:
 
                     //Intent For Navigating to MapsActivity
-                    Intent i = new Intent(FavActivity.this,MapsActivity.class);
+                    Intent i = new Intent(FavActivity.this, MapsActivity.class);
                     startActivity(i);
 
                     return true;
                 case R.id.navigation_dashboard:
 
-
-                    return true;
-                case R.id.navigation_notifications:
 
                     return true;
             }
@@ -57,12 +54,13 @@ public class FavActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        navigation.setSelectedItemId(R.id.navigation_dashboard);
+
+
         //mTextMessage = (TextView) findViewById(R.id.message);
 
 
-
-
-        lista = (ListView)findViewById(R.id.favlist);
+        lista = (ListView) findViewById(R.id.favlist);
 
 
         ArrayList<Station> itemsFavStations = ExtractJson.favStationList;
@@ -110,12 +108,12 @@ public class FavActivity extends AppCompatActivity {
         private String contentType = "";
 
         @Override
-        @SuppressWarnings( "deprecation" )
+        @SuppressWarnings("deprecation")
         protected String doInBackground(String... urls) {
             String response = "";
 
             try {
-                FavStorage.initFavList( FavActivity.this);
+                FavStorage.initFavList(FavActivity.this);
             } catch (Exception e) {
                 response = e.toString();
             }

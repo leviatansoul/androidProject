@@ -19,17 +19,18 @@ public class StationAdapter extends ArrayAdapter<Station> {
     private Context mContext;
     private Activity mActivity;
 
-    StationAdapter(Context context, ArrayList<Station> stations, Activity activity ) {
-        super( context,0, stations ); // Call to super class constructor
+    StationAdapter(Context context, ArrayList<Station> stations, Activity activity) {
+        super(context, 0, stations); // Call to super class constructor
         items = stations;
         mContext = context;
         mActivity = activity;
     }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent ) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         View newView = convertView;
 // This approach can be improved for performance
-        if ( newView == null ) {
+        if (newView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             newView = inflater.inflate(R.layout.fav_list_item, parent, false);
@@ -42,20 +43,20 @@ public class StationAdapter extends ArrayAdapter<Station> {
         TextView noavailable = (TextView) newView.findViewById(R.id.noavailable);
         TextView number = (TextView) newView.findViewById(R.id.station);
         Button delete = (Button) newView.findViewById(R.id.delete);
-      //  ImageView imageView = (ImageView) newView.findViewById(R.id.imgCountry);
+        //  ImageView imageView = (ImageView) newView.findViewById(R.id.imgCountry);
         final Station station = items.get(position);
         name.setText(station.getName());
         address.setText(station.getAddress());
-        bicis.setText(""+station.getDock_bikes());
-        espacios.setText(""+station.getFree_bases());
-        noavailable.setText(""+station.getNo_available());
+        bicis.setText("" + station.getDock_bikes());
+        espacios.setText("" + station.getFree_bases());
+        noavailable.setText("" + station.getNo_available());
         number.setText(station.getNumber());
-      //  imageView.setImageResource(country.getImageResource());
+        //  imageView.setImageResource(country.getImageResource());
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("BORRRAR numero ",Integer.toString(station.getId()));
+                Log.d("BORRRAR numero ", Integer.toString(station.getId()));
                 FavStorage.deleteFav(Integer.toString(station.getId()), mActivity);
                 FavActivity.adapter.notifyDataSetChanged();
             }

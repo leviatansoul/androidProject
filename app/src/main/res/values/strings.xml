@@ -8,7 +8,7 @@
     <string name="satellite">Satellite</string>
     <string name="title_activity_maps">Map</string>
     <string name="pantalla_de_carga">Cargando...</string>
-    <string name="appwidget_text">Num. de estación</string>
+    <string name="appwidget_text"></string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
 </resources>
