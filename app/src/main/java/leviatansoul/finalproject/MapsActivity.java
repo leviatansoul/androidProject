@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,9 +24,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+
 import android.location.Location;
 
 import android.location.LocationManager;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -46,9 +49,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location myLocation;
 
     // Declare a variable for the cluster manager.
-    private ClusterManager <MyItem> clusterManager;
+    private ClusterManager<MyItem> clusterManager;
 
     private GoogleMap mMap;
+    private FloatingActionButton refresh;
 
     Button favorites;
 
@@ -64,11 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 case R.id.navigation_dashboard:
 
                     //Intent For Navigating to FavActivity
-                    Intent a = new Intent(MapsActivity.this,FavActivity.class);
+                    Intent a = new Intent(MapsActivity.this, FavActivity.class);
                     startActivity(a);
-
-                    return true;
-                case R.id.navigation_notifications:
 
                     return true;
             }
@@ -85,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        FloatingActionButton refresh = findViewById(R.id.refresh);
+        refresh = findViewById(R.id.refresh);
 
         checkLocationPermissionBT();
 
@@ -115,8 +116,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
 
-                MapsActivity.DownloadWebPageTask task = new MapsActivity.DownloadWebPageTask();
+                MapsActivity.refreshWebPageTask task = new MapsActivity.refreshWebPageTask();
+                mMap.clear();
+                refresh.setVisibility(View.GONE);
                 task.execute();
+
             }
         });
     }
@@ -138,6 +142,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         mMap.setInfoWindowAdapter(new InfoWindowAdapter(this));
+
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                int res = 0;
+                for (int i = 0; i < ExtractJson.stationList.size(); i++) {
+
+                    if (marker.getTitle().equals(Integer.toString(ExtractJson.stationList.get(i).getId()))) {
+                        res = Integer.parseInt(marker.getTitle());
+                    }
+                }
+
+                Log.d("MAP LISTETNER " + marker.getTitle() + "  id  " + marker.getId(), Integer.toString(res));
+
+
+                if (FavStorage.exists(Integer.toString(res), MapsActivity.this)) {
+                    Toast.makeText(MapsActivity.this, "Ya es una estación favorita", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    FavStorage.insertFav(Integer.toString(res), MapsActivity.this);
+                    Toast.makeText(MapsActivity.this, "Agregado a favoritos", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -163,11 +196,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         clusterManager.clearItems();
 
         //ubicacion estaciones
-        for(int i=0; i<ExtractJson.stationList.size(); i ++) {
+        for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
             // Add cluster items (markers) to the cluster manager.
             MyItem item = new MyItem(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude(), Integer.toString(ExtractJson.stationList.get(i).getId()),
-                    "Bicis disponibles: "+ ExtractJson.stationList.get(i).getDock_bikes(), ExtractJson.stationList.get(i).getDock_bikes());
+                    "Bicis disponibles: " + ExtractJson.stationList.get(i).getDock_bikes(), ExtractJson.stationList.get(i).getDock_bikes());
             clusterManager.addItem(item);
         }
 
@@ -218,15 +251,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
 
-            if(item.getDock_bikes()>10){
+            if (item.getDock_bikes() > 10) {
                 BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
                 markerOptions.icon(markerDescriptor);
-            }
-            else if (item.getDock_bikes()<3){
+            } else if (item.getDock_bikes() < 3) {
                 BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
                 markerOptions.icon(markerDescriptor);
-            }
-            else{
+            } else {
                 BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
                 markerOptions.icon(markerDescriptor);
             }
@@ -246,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         private String contentType = "";
 
         @Override
-        @SuppressWarnings( "deprecation" )
+        @SuppressWarnings("deprecation")
         protected String doInBackground(String... urls) {
             String response = "";
 
@@ -256,6 +287,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 response = e.toString();
             }
             return response;
+        }
+    }
+
+    private class refreshWebPageTask extends AsyncTask<String, Integer, String> {
+
+        private String contentType = "";
+
+        @Override
+        @SuppressWarnings("deprecation")
+        protected String doInBackground(String... urls) {
+
+            String response = "";
+
+            try {
+                ExtractJson.fillStationList();
+            } catch (Exception e) {
+                response = e.toString();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            setUpClusterer();
+
+            clusterManager.clearItems();
+
+            //ubicacion estaciones
+            for (int i = 0; i < ExtractJson.stationList.size(); i++) {
+
+                // Add cluster items (markers) to the cluster manager.
+                MyItem item = new MyItem(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude(), Integer.toString(ExtractJson.stationList.get(i).getId()),
+                        "Bicis disponibles: " + ExtractJson.stationList.get(i).getDock_bikes(), ExtractJson.stationList.get(i).getDock_bikes());
+                clusterManager.addItem(item);
+            }
+
+            //Force a re-cluster. You may want to call this after adding new item(s).
+            clusterManager.cluster();
+            refresh.setVisibility(View.VISIBLE);
+
         }
     }
 }

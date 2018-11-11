@@ -22,11 +22,9 @@ public class Station {
     }
 
 
-
     public int getId() {
         return id;
     }
-
 
 
     public void setId(int id) {
@@ -34,11 +32,9 @@ public class Station {
     }
 
 
-
     public float getLatitude() {
         return latitude;
     }
-
 
 
     public void setLatitude(float latitude) {
@@ -46,11 +42,9 @@ public class Station {
     }
 
 
-
     public float getLongitude() {
         return longitude;
     }
-
 
 
     public void setLongitude(float longitude) {
@@ -58,11 +52,9 @@ public class Station {
     }
 
 
-
     public String getName() {
         return name;
     }
-
 
 
     public void setName(String name) {
@@ -70,11 +62,9 @@ public class Station {
     }
 
 
-
     public int getLight() {
         return light;
     }
-
 
 
     public void setLight(int light) {
@@ -82,11 +72,9 @@ public class Station {
     }
 
 
-
     public String getNumber() {
         return number;
     }
-
 
 
     public void setNumber(String number) {
@@ -94,11 +82,9 @@ public class Station {
     }
 
 
-
     public String getAddress() {
         return address;
     }
-
 
 
     public void setAddress(String address) {
@@ -106,11 +92,9 @@ public class Station {
     }
 
 
-
     public int getActivate() {
         return activate;
     }
-
 
 
     public void setActivate(int activate) {
@@ -118,9 +102,9 @@ public class Station {
     }
 
 
-
-    public int getNo_available() { return no_available; }
-
+    public int getNo_available() {
+        return no_available;
+    }
 
 
     public void setNo_available(int no_available) {
@@ -128,11 +112,9 @@ public class Station {
     }
 
 
-
     public int getTotal_bases() {
         return total_bases;
     }
-
 
 
     public void setTotal_bases(int total_bases) {
@@ -140,11 +122,9 @@ public class Station {
     }
 
 
-
     public int getDock_bikes() {
         return dock_bikes;
     }
-
 
 
     public void setDock_bikes(int doc_bikes) {
@@ -152,11 +132,9 @@ public class Station {
     }
 
 
-
     public int getFree_bases() {
         return free_bases;
     }
-
 
 
     public void setFree_bases(int free_bases) {
@@ -164,17 +142,14 @@ public class Station {
     }
 
 
-
     public int getReservations_count() {
         return reservations_count;
     }
 
 
-
     public void setReservations_count(int reservations_count) {
         this.reservations_count = reservations_count;
     }
-
 
 
     public static void main(String[] args) {

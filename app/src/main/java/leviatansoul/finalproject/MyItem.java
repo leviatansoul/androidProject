@@ -37,7 +37,6 @@ public class MyItem implements ClusterItem {
     }
 
 
-
     @Override
     public LatLng getPosition() {
         return mPosition;
@@ -70,7 +69,9 @@ public class MyItem implements ClusterItem {
         return mFree_bases;
     }
 
-    public int getNo_available() { return mNo_available; }
+    public int getNo_available() {
+        return mNo_available;
+    }
 
     public String getName() {
         return mName;

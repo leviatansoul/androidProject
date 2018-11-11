@@ -115,15 +115,14 @@ public class ExtractJson {
             JsonElement jelem = gson.fromJson(jsonString, JsonElement.class);
             jobj = jelem.getAsJsonObject(); //Obtenemos Json de la web
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
         return jobj;
     }
 
-    public static void fillStationList(){
+    public static void fillStationList() {
         JsonObject json = ExtractJson.getJson(URL_BICIMAD);
 
         String data = json.get("data").getAsString();
@@ -138,7 +137,7 @@ public class ExtractJson {
         //clear the list
         stationList.clear();
 
-        for(int i = 0; i<stationsJson.size(); i++) {
+        for (int i = 0; i < stationsJson.size(); i++) {
             Station st = gson.fromJson(stationsJson.get(i), Station.class);
             System.out.println(st.getLatitude());
             stationList.add(st);
@@ -149,8 +148,8 @@ public class ExtractJson {
         System.out.println(URL_BICIMAD);
     }
 
-    public static Station getSingleStation(String station){
-        String singleUrl = URL_BICIMAD_SINGLE+station;
+    public static Station getSingleStation(String station) {
+        String singleUrl = URL_BICIMAD_SINGLE + station;
         JsonObject json = ExtractJson.getJson(singleUrl);
         String data = json.get("data").getAsString();
         Gson gson = new Gson();
@@ -162,11 +161,6 @@ public class ExtractJson {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
-
-
-
-
 
 
     }

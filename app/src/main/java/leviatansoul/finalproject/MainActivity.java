@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressBar = findViewById( R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
 
         MainActivity.DownloadWebPageTask task = new MainActivity.DownloadWebPageTask();
         task.execute();
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         private String contentType = "";
 
         @Override
-        @SuppressWarnings( "deprecation" )
+        @SuppressWarnings("deprecation")
         protected String doInBackground(String... urls) {
             String response = "";
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             // Executed on UI thread
-            progressBar.incrementProgressBy( 10 );
+            progressBar.incrementProgressBy(10);
         }
 
         @Override
