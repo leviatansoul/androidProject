@@ -172,11 +172,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //Actual location
-        //LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 
         //place the camera in the user location
-        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
-        //mMap.animateCamera(cameraUpdate);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
+        mMap.animateCamera(cameraUpdate);
 
         setUpClusterer();
 
@@ -193,8 +193,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Force a re-cluster.
         clusterManager.cluster();
 
-        //mMap.setMyLocationEnabled(true);
-        //mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
     /**check Location Permission and ask for it if the user has not allow it yet**/

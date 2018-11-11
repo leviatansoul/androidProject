@@ -55,7 +55,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
 
         view.setClickable(true);
 
-        //find the station 
+        //find station
         for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
             if (marker.getTitle().equals(Integer.toString(ExtractJson.stationList.get(i).getId()))) {
