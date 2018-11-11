@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             // Executed on UI thread
+            progressBar.incrementProgressBy( 10 );
         }
 
         @Override

@@ -2,7 +2,7 @@
     <string name="app_name">FinalProject</string>
     <string name="title_mapa">Mapa</string>
     <string name="title_favoritos">Favoritos</string>
-    <string name="title_estaciones">Estaciones</string>
+    <string name="title_notifications">Notifications</string>
     <string name="map">Map</string>
     <string name="hybrid">Hybrid</string>
     <string name="satellite">Satellite</string>

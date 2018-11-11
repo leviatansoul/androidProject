@@ -12,7 +12,7 @@ import com.google.android.gms.internal.maps.zzt;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnClickListener {
 
     private View view;
 
@@ -46,8 +46,11 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         TextView address = view.findViewById(R.id.address);
         TextView bicis = view.findViewById(R.id.bicis);
         TextView espacios = view.findViewById(R.id.espacios);
-        //TextView noavailable = view.findViewById(R.id.noavailable);
+        TextView noavailable = view.findViewById(R.id.noavailable);
         TextView number = view.findViewById(R.id.station);
+
+        Button favorites = view.findViewById(R.id.favorites);
+        view.setClickable(true);
 
         for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
@@ -60,12 +63,27 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         address.setText(ExtractJson.stationList.get(station).getAddress());
         bicis.setText(Integer.toString(ExtractJson.stationList.get(station).getDock_bikes()));
         espacios.setText(Integer.toString(ExtractJson.stationList.get(station).getFree_bases()));
-        //noavailable.setText(Integer.toString(ExtractJson.stationList.get(station).getNo_available()));
+        noavailable.setText(Integer.toString(ExtractJson.stationList.get(station).getNo_available()));
         number.setText(ExtractJson.stationList.get(station).getNumber());
+
+        view.setOnClickListener(InfoWindowAdapter.this);
 
         return view;
         
     }
 
+    /* This method is called when any of the activity's view components is clicked. */
+    @Override
+    public void onClick(View view) {
+        if(view != null)
+        {
+
+
+            // Create the toast popup message.
+            Toast toast = Toast.makeText(view.getContext(), "HOLI", Toast.LENGTH_SHORT);
+
+            toast.show();
+        }
+    }
 }
 
