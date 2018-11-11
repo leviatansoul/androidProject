@@ -21,56 +21,28 @@ public class ExtractJson {
     private final static String URL_BICIMAD = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
     private final static String URL_BICIMAD_SINGLE = "https://rbdata.emtmadrid.es:8443/BiciMad/get_single_station/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 
-
+    /**Returns the Json file in String**/
     public static String getFile(String url) {
-        //-----------------------------------------------------//
-        //  Step 1:  Start creating a few objects we'll need.
-        //-----------------------------------------------------//
 
         URL u;
         InputStream is = null;
         BufferedReader dis;
         String s;
-        String res = ""; //
+        String res = "";
 
         try {
-
-            //------------------------------------------------------------//
-            // Step 2:  Create the URL.                                   //
-            //------------------------------------------------------------//
-            // Note: Put your real URL here, or better yet, read it as a  //
-            // command-line arg, or read it from a file.                  //
-            //------------------------------------------------------------//
-
+            //Create the URL.
             u = new URL(url);
 
-            //----------------------------------------------//
-            // Step 3:  Open an input stream from the url.  //
-            //----------------------------------------------//
+            //Open an input stream from the url.
+            is = u.openStream();
 
-            is = u.openStream();         // throws an IOException
-
-            //-------------------------------------------------------------//
-            // Step 4:                                                     //
-            //-------------------------------------------------------------//
-            // Convert the InputStream to a buffered DataInputStream.      //
-            // Buffering the stream makes the reading faster; the          //
-            // readLine() method of the DataInputStream makes the reading  //
-            // easier.                                                     //
-            //-------------------------------------------------------------//
-
+            // Convert the InputStream to a buffered DataInputStream.
             dis = new BufferedReader(new InputStreamReader(u.openStream()));
 
-            //------------------------------------------------------------//
-            // Step 5:                                                    //
-            //------------------------------------------------------------//
-            // Now just read each record of the input stream, and print   //
-            // it out.  Note that it's assumed that this problem is run   //
-            // from a command-line, not from an application or applet.    //
-            //------------------------------------------------------------//
-
+            //read each record of the input stream
             while ((s = dis.readLine()) != null) {
-                //System.out.println(s);
+
                 res = res + s;
             }
 
@@ -87,33 +59,26 @@ public class ExtractJson {
             System.exit(1);
 
         } finally {
-
-            //---------------------------------//
-            // Step 6:  Close the InputStream  //
-            //---------------------------------//
-
+            //Close the InputStream  //
             try {
                 is.close();
 
             } catch (IOException ioe) {
-                // just going to ignore this one
+
             }
-
-        } // end of 'finally' clause
-
-        System.out.println(res);
+        }
         return res;
     }
 
+    /** Returns a Json Object with all the information of the web **/
     public static JsonObject getJson(String url) {
 
         JsonObject jobj = new JsonObject();
         try {
-            //Url del json (aÃ±adir la de BiciMad)
-            String jsonString = ExtractJson.getFile(url); //Obtiene Json en String
+            String jsonString = ExtractJson.getFile(url);
             Gson gson = new Gson();
             JsonElement jelem = gson.fromJson(jsonString, JsonElement.class);
-            jobj = jelem.getAsJsonObject(); //Obtenemos Json de la web
+            jobj = jelem.getAsJsonObject();
 
         } catch (Exception e) {
 
@@ -122,11 +87,11 @@ public class ExtractJson {
         return jobj;
     }
 
+    /**Fill the station class with the Json information **/
     public static void fillStationList() {
         JsonObject json = ExtractJson.getJson(URL_BICIMAD);
 
         String data = json.get("data").getAsString();
-
 
         Gson gson = new Gson();
         JsonElement jelem = gson.fromJson(data, JsonElement.class);
@@ -139,15 +104,13 @@ public class ExtractJson {
 
         for (int i = 0; i < stationsJson.size(); i++) {
             Station st = gson.fromJson(stationsJson.get(i), Station.class);
-            System.out.println(st.getLatitude());
             stationList.add(st);
-
         }
-
 
         System.out.println(URL_BICIMAD);
     }
 
+    /**Get a single station from the web **/
     public static Station getSingleStation(String station) {
         String singleUrl = URL_BICIMAD_SINGLE + station;
         JsonObject json = ExtractJson.getJson(singleUrl);
@@ -162,7 +125,5 @@ public class ExtractJson {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
-
     }
-
 }

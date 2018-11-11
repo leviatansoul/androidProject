@@ -48,7 +48,6 @@ public class BikeStopWidget extends AppWidgetProvider {
 
         }
 
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
@@ -76,7 +75,6 @@ public class BikeStopWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the first widget is created
     }
 
-
     public void onReceive(Context context, Intent intent) {
 
         if (WIDGET_BUTTON.equals(intent.getAction())) {
@@ -84,8 +82,6 @@ public class BikeStopWidget extends AppWidgetProvider {
             recargar();
         }
     }
-
-    ;
 
     @Override
     public void onDisabled(Context context) {
@@ -101,9 +97,7 @@ public class BikeStopWidget extends AppWidgetProvider {
             awm.updateAppWidget(appWidgetIdentificador, views);
             task.execute(num);
         }
-
     }
-
 
     private static class GetStation extends AsyncTask<String, Integer, String> {
 
@@ -155,7 +149,5 @@ public class BikeStopWidget extends AppWidgetProvider {
 
         }
     }
-
-
 }
 

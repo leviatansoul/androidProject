@@ -48,23 +48,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private Location myLocation;
 
-    // Declare a variable for the cluster manager.
     private ClusterManager<MyItem> clusterManager;
 
     private GoogleMap mMap;
-    private FloatingActionButton refresh;
 
-    Button favorites;
+    private FloatingActionButton refresh;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        /**Navigation panel**/
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
 
                     return true;
+
                 case R.id.navigation_dashboard:
 
                     //Intent For Navigating to FavActivity
@@ -76,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return false;
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        //To find the best provider
         Criteria criteria = new Criteria();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -105,12 +105,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        //get the best last location
         myLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,29 +120,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 refresh.setVisibility(View.GONE);
                 task.execute();
-
             }
         });
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    /**Manipulates the map once available. This callback is triggered when the map is ready to be used.**/
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        //InfoWindowAdapter display a customize infoWindow
         mMap.setInfoWindowAdapter(new InfoWindowAdapter(this));
-
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -151,13 +141,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int res = 0;
                 for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
+                    //search for the station, looking in the list which one match with the title of the marker that has been click
                     if (marker.getTitle().equals(Integer.toString(ExtractJson.stationList.get(i).getId()))) {
                         res = Integer.parseInt(marker.getTitle());
                     }
                 }
 
                 Log.d("MAP LISTETNER " + marker.getTitle() + "  id  " + marker.getId(), Integer.toString(res));
-
 
                 if (FavStorage.exists(Integer.toString(res), MapsActivity.this)) {
                     Toast.makeText(MapsActivity.this, "Ya es una estación favorita", Toast.LENGTH_SHORT).show();
@@ -166,11 +156,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     FavStorage.insertFav(Integer.toString(res), MapsActivity.this);
                     Toast.makeText(MapsActivity.this, "Agregado a favoritos", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -184,37 +171,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        //ubicacion actual
-        LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        //Actual location
+        //LatLng ubicLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 
-        //mMap.addMarker(new MarkerOptions().position(ubicLatLng));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
-        mMap.animateCamera(cameraUpdate);
+        //place the camera in the user location
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicLatLng, 17);
+        //mMap.animateCamera(cameraUpdate);
 
         setUpClusterer();
 
         clusterManager.clearItems();
 
-        //ubicacion estaciones
+        // Add cluster items (markers) to the cluster manager.
         for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
-            // Add cluster items (markers) to the cluster manager.
             MyItem item = new MyItem(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude(), Integer.toString(ExtractJson.stationList.get(i).getId()),
                     "Bicis disponibles: " + ExtractJson.stationList.get(i).getDock_bikes(), ExtractJson.stationList.get(i).getDock_bikes());
             clusterManager.addItem(item);
         }
 
-        //Force a re-cluster. You may want to call this after adding new item(s).
+        //Force a re-cluster.
         clusterManager.cluster();
 
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        //mMap.setMyLocationEnabled(true);
+        //mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
-    //permisions
+    /**check Location Permission and ask for it if the user has not allow it yet**/
     private void checkLocationPermissionBT() {
-        //If Android version is M (6.0 API 23) or newer, check if it has Location permissions
 
+        //If Android version is M (6.0 API 23) or newer, check if it has Location permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -222,10 +208,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, 1222);
             }
         }
-
     }
 
-
+    /**Set some cluster configuration**/
     private void setUpClusterer() {
 
         // Initialize the manager with the context and the map.
@@ -233,16 +218,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         clusterManager.setRenderer(new MyClusterRenderer(this, mMap, clusterManager));
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
+        // Point the map's listeners at the listeners implemented by the cluster manager.
         mMap.setOnCameraIdleListener(clusterManager);
         mMap.setOnMarkerClickListener(clusterManager);
 
     }
 
+    /** Custom ClusterRender class for display the markers in different colors depending of the bicycle available in each station**/
     public class MyClusterRenderer extends DefaultClusterRenderer<MyItem> {
-
-        private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
 
         public MyClusterRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
             super(context, map, clusterManager);
@@ -261,38 +244,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
                 markerOptions.icon(markerDescriptor);
             }
-
         }
 
         @Override
         protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
             super.onClusterItemRendered(clusterItem, marker);
-
-        }
-
-    }
-
-    private class DownloadWebPageTask extends AsyncTask<String, Integer, String> {
-
-        private String contentType = "";
-
-        @Override
-        @SuppressWarnings("deprecation")
-        protected String doInBackground(String... urls) {
-            String response = "";
-
-            try {
-                ExtractJson.fillStationList();
-            } catch (Exception e) {
-                response = e.toString();
-            }
-            return response;
         }
     }
 
+    /**Refresh the data, downloading again the information from the web**/
     private class refreshWebPageTask extends AsyncTask<String, Integer, String> {
-
-        private String contentType = "";
 
         @Override
         @SuppressWarnings("deprecation")
@@ -314,19 +275,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             clusterManager.clearItems();
 
-            //ubicacion estaciones
+            // Add cluster items (markers) to the cluster manager.
             for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
-                // Add cluster items (markers) to the cluster manager.
                 MyItem item = new MyItem(ExtractJson.stationList.get(i).getLatitude(), ExtractJson.stationList.get(i).getLongitude(), Integer.toString(ExtractJson.stationList.get(i).getId()),
                         "Bicis disponibles: " + ExtractJson.stationList.get(i).getDock_bikes(), ExtractJson.stationList.get(i).getDock_bikes());
                 clusterManager.addItem(item);
             }
 
-            //Force a re-cluster. You may want to call this after adding new item(s).
+            //Force a re-cluster.
             clusterManager.cluster();
             refresh.setVisibility(View.VISIBLE);
-
         }
     }
 }

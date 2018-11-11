@@ -26,7 +26,6 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         LayoutInflater inflater = (LayoutInflater) myContext.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         view = inflater.inflate(R.layout.info_window, null);
-
     }
 
     @Override
@@ -39,6 +38,8 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         return null;
     }
 
+
+    /**Display the information of the station when the user click on the marker**/
     @Override
     public View getInfoWindow(final Marker marker) {
 
@@ -52,17 +53,15 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
         TextView noavailable = view.findViewById(R.id.noavailable);
         TextView number = view.findViewById(R.id.station);
 
-        //Button favorites = view.findViewById(R.id.favorites);
         view.setClickable(true);
 
-
+        //find the station 
         for (int i = 0; i < ExtractJson.stationList.size(); i++) {
 
             if (marker.getTitle().equals(Integer.toString(ExtractJson.stationList.get(i).getId()))) {
                 station = i;
             }
         }
-
 
         name.setText(ExtractJson.stationList.get(station).getName());
         address.setText(ExtractJson.stationList.get(station).getAddress());
@@ -73,21 +72,15 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, View.OnCl
 
         view.setOnClickListener(InfoWindowAdapter.this);
 
-
         return view;
 
     }
 
-    /* This method is called when any of the activity's view components is clicked. */
+    // This method is called when any of the activity's view components is clicked.
     @Override
     public void onClick(View view) {
         if (view != null) {
 
-
-            // Create the toast popup message.
-            Toast toast = Toast.makeText(view.getContext(), "HOLI", Toast.LENGTH_SHORT);
-
-            toast.show();
         }
     }
 }
